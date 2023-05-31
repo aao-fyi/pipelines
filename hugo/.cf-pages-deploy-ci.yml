@@ -1,0 +1,46 @@
+image: registry.gitlab.com/pages/hugo/hugo_extended:latest
+
+stages:
+  - build
+  - deploy
+
+variables:
+  # Cloudflare variables
+  CLOUDFLARE_API_TOKEN: ""
+  CLOUDFLARE_ACCOUNT_ID: ""
+  # Project variables
+  CF_PAGES_PROJECT: ""
+  CF_PAGES_BRANCH: $CI_COMMIT_BRANCH
+
+build:
+  stage: build
+  # Install dependencies
+  before_script:
+    # Install Go, Git, NPM
+    - apk add --update --no-cache git go npm
+    # Install project NPM dependencies
+    - |
+      if [ -f package.json ]; then
+        npm ci
+      fi
+  # Build project
+  script:
+    # Hugo build
+    - hugo
+  # Export build
+  artifacts:
+    paths:
+      - public
+
+deploy:
+  stage: deploy
+  # Install dependencies
+  before_script:
+    # Install Go, Git, NPM
+    - apk add --update --no-cache npm
+    # Install Cloudflare Wrangler
+    - npm install -g wrangler
+  # Deploy project
+  script:
+    # Direct upload Hugo `public` output to Cloudflare Pages
+    - wrangler pages deploy ./public --project-name=$CF_PAGES_PROJECT --branch=$CF_PAGES_BRANCH
