@@ -1,5 +1,3 @@
-image: registry.gitlab.com/pages/hugo/hugo_extended:latest
-
 stages:
   - build-pages
   - deploy-pages
@@ -15,6 +13,7 @@ variables:
 
 build-pages:
   stage: build-pages
+  image: registry.gitlab.com/pages/hugo/hugo_extended:latest
   # Install dependencies
   before_script:
     # Install Go, Git, NPM
@@ -41,6 +40,7 @@ build-pages:
 
 deploy-pages:
   stage: deploy-pages
+  image: registry.gitlab.com/pages/hugo/hugo_extended:latest
   # Install dependencies
   before_script:
     # Install Go, Git, NPM
