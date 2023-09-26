@@ -25,6 +25,7 @@ build-pages:
       elif [ -f "$HUGO_SOURCE_DIR/package.json" ]; then
         cd "$HUGO_SOURCE_DIR"
         npm ci
+        cd -
       fi
   # Build project
   script:
