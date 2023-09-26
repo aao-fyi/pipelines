@@ -11,6 +11,7 @@ variables:
   # Project variables
   CF_PAGES_PROJECT: ""
   CF_PAGES_BRANCH: $CI_COMMIT_BRANCH
+  HUGO_SOURCE_DIR: ""
 
 build:
   stage: build
@@ -26,7 +27,13 @@ build:
   # Build project
   script:
     # Hugo build
-    - hugo
+    - |
+      if [ -n "$HUGO_SOURCE_DIR" ]; then
+        hugo -s "$HUGO_SOURCE_DIR"
+        mv "$HUGO_SOURCE_DIR/public" ./public
+      else
+        hugo
+      fi
   # Export build
   artifacts:
     paths:
