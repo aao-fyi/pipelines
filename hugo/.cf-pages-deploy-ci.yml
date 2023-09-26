@@ -1,8 +1,8 @@
 image: registry.gitlab.com/pages/hugo/hugo_extended:latest
 
 stages:
-  - build
-  - deploy
+  - build-pages
+  - deploy-pages
 
 variables:
   # Cloudflare variables
@@ -13,8 +13,8 @@ variables:
   CF_PAGES_BRANCH: $CI_COMMIT_BRANCH
   HUGO_SOURCE_DIR: ""
 
-build:
-  stage: build
+build-pages:
+  stage: build-pages
   # Install dependencies
   before_script:
     # Install Go, Git, NPM
@@ -39,8 +39,8 @@ build:
     paths:
       - public
 
-deploy:
-  stage: deploy
+deploy-pages:
+  stage: deploy-pages
   # Install dependencies
   before_script:
     # Install Go, Git, NPM
