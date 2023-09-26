@@ -20,7 +20,10 @@ build-pages:
     - apk add --update --no-cache git go npm
     # Install project NPM dependencies
     - |
-      if [ -f package.json ]; then
+      if [ -f "package.json" ]; then
+        npm ci
+      elif [ -f "$HUGO_SOURCE_DIR/package.json" ]; then
+        cd "$HUGO_SOURCE_DIR"
         npm ci
       fi
   # Build project
