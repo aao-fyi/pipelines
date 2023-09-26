@@ -32,7 +32,9 @@ build-pages:
     # Hugo build
     - |
       if [ -n "$HUGO_SOURCE_DIR" ]; then
-        hugo -s "$HUGO_SOURCE_DIR"
+        cd "$HUGO_SOURCE_DIR"
+        hugo
+        cd -
         mv "$HUGO_SOURCE_DIR/public" ./public
       else
         hugo
