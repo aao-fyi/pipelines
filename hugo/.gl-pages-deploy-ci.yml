@@ -1,24 +1,14 @@
 image: registry.gitlab.com/pages/hugo/hugo_extended:latest
 
 stages:
-  - deploy
+  - build-pages
+  - warn-depreciated
 
-pages:
-  stage: deploy
-  # Install dependencies
-  before_script:
-    # Install Go, Git, NPM
-    - apk add --update --no-cache git go npm
-    # Install project NPM dependencies
-    - |
-      if [ -f package.json ]; then
-        npm ci
-      fi
-  # Build project
+include:
+  - project: "aao-fyi/pipelines"
+    file: "hugo/.hugo-build-ci.yml"
+
+warn-depreciated:
+  stage: warn-depreciated
   script:
-    # Hugo build
-    - hugo
-  # Export build
-  artifacts:
-    paths:
-      - public
+    - echo "This CI/CD pipeline is DEPRECIATED, switch from `hugo/.gl-pages-deploy-ci.yml` to `hugo/.hugo-build-ci.yml` in the same `aao-fyi/pipelines` project for continued functionality. This pipeline ran as an alias for that pipeline on this job." && exit 1

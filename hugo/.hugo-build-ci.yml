@@ -1,0 +1,36 @@
+variables:
+  # Hugo source directory, optional
+  HUGO_SOURCE_DIR: ""
+
+build-pages:
+  stage: build-pages
+  image: registry.gitlab.com/pages/hugo/hugo_extended:latest
+  # Install dependencies
+  before_script:
+    # Install Go, Git, NPM
+    - apk add --update --no-cache git go npm
+    # Install project NPM dependencies
+    - |
+      if [ -f "package.json" ]; then
+        npm ci
+      elif [ -f "$HUGO_SOURCE_DIR/package.json" ]; then
+        cd "$HUGO_SOURCE_DIR"
+        npm ci
+        cd -
+      fi
+  # Build project
+  script:
+    # Hugo build
+    - |
+      if [ -n "$HUGO_SOURCE_DIR" ]; then
+        cd "$HUGO_SOURCE_DIR"
+        hugo
+        cd -
+        mv "$HUGO_SOURCE_DIR/public" ./public
+      else
+        hugo
+      fi
+  # Export build
+  artifacts:
+    paths:
+      - public
